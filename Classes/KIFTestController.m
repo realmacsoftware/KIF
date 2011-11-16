@@ -287,7 +287,7 @@ static void releaseInstance()
 
 - (void)_scheduleCurrentTestStep;
 {
-    [self performSelector:@selector(_delayedScheduleCurrentTestStep) withObject:nil afterDelay:0.01f];
+    [self performSelector:@selector(_delayedScheduleCurrentTestStep) withObject:nil afterDelay:0.01f inModes:[NSArray arrayWithObject:NSRunLoopCommonModes]];		
 }
 
 - (void)_delayedScheduleCurrentTestStep;
