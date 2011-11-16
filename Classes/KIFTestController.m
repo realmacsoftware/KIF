@@ -33,7 +33,9 @@ extern id objc_msgSend(id theReceiver, SEL theSelector, ...);
 + (void)_enableAccessibilityInSimulator;
 
 - (void)_initializeScenariosIfNeeded;
+#if TARGET_OS_IPHONE
 - (BOOL)_isAccessibilityInspectorEnabled;
+#endif
 - (void)_scheduleCurrentTestStep;
 - (void)_performTestStep:(KIFTestStep *)step;
 - (void)_advanceWithResult:(KIFTestStepResult)result error:(NSError*) error;
@@ -265,6 +267,8 @@ static void releaseInstance()
     }
 }
 
+#if TARGET_OS_IPHONE
+
 - (BOOL)_isAccessibilityInspectorEnabled;
 {
     // This method for testing if the inspector is enabled was taken from the Frank framework.
@@ -279,6 +283,8 @@ static void releaseInstance()
     
     return isInspectorEnabled;
 }
+
+#endif
 
 - (void)_scheduleCurrentTestStep;
 {
@@ -429,12 +435,15 @@ static void releaseInstance()
     return nextScenario;
 }
 
+
 - (void)_writeScreenshotForStep:(KIFTestStep *)step;
 {
     NSString *outputPath = [[[NSProcessInfo processInfo] environment] objectForKey:@"KIF_SCREENSHOTS"];
     if (!outputPath) {
         return;
     }
+	
+#if TARGET_OS_IPHONE
     
     NSArray *windows = [[UIApplication sharedApplication] windows];
     if (windows.count == 0) {
@@ -452,6 +461,7 @@ static void releaseInstance()
     outputPath = [outputPath stringByAppendingPathComponent:[step.description stringByReplacingOccurrencesOfString:@"/" withString:@"_"]];
     outputPath = [outputPath stringByAppendingPathExtension:@"png"];
     [UIImagePNGRepresentation(image) writeToFile:outputPath atomically:YES];
+#endif
 }
 
 #pragma mark Logging

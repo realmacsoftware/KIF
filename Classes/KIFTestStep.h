@@ -7,8 +7,9 @@
 //  See the LICENSE file distributed with this work for the terms under
 //  which Square, Inc. licenses this file to you.
 
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
-
+#endif
 
 /*!
  @define KIFTestCondition
@@ -158,6 +159,10 @@ typedef KIFTestStepResult (^KIFTestStepExecutionBlock)(KIFTestStep *step, NSErro
  */
 + (id)stepThatSucceeds;
 
+// iOS steps
+
+#if TARGET_OS_IPHONE
+
 /*!
  @method stepToWaitForViewWithAccessibilityLabel:
  @abstract A step that waits until a view or accessibility element is present.
@@ -254,6 +259,8 @@ typedef KIFTestStepResult (^KIFTestStepExecutionBlock)(KIFTestStep *step, NSErro
  */
 + (id)stepToWaitForTappableViewWithAccessibilityLabel:(NSString *)label value:(NSString *)value traits:(UIAccessibilityTraits)traits;
 
+#endif
+
 /*!
  @method stepToWaitForTimeInterval:description:
  @abstract A step that waits for a certain amount of time.
@@ -273,6 +280,8 @@ typedef KIFTestStepResult (^KIFTestStepExecutionBlock)(KIFTestStep *step, NSErro
  @result A configured test step.
  */
 + (id)stepToWaitForNotificationName:(NSString*)name object:(id)object;
+
+#if TARGET_OS_IPHONE
 
 /*!
  @method stepToTapViewWithAccessibilityLabel:
@@ -372,7 +381,11 @@ typedef KIFTestStepResult (^KIFTestStepExecutionBlock)(KIFTestStep *step, NSErro
  */
 + (id)stepToSimulateMemoryWarning;
 
+#endif
+
 + (void)stepFailed;
+
+#if TARGET_OS_IPHONE
 
 /*!
  @method stepsToChoosePhotoInAlbum:atRow:column:
@@ -394,5 +407,7 @@ typedef KIFTestStepResult (^KIFTestStepExecutionBlock)(KIFTestStep *step, NSErro
  @result A configured test step.
  */
 + (id)stepToTapRowInTableViewWithAccessibilityLabel:(NSString*)tableViewLabel atIndexPath:(NSIndexPath *)indexPath;
+
+#endif
 
 @end

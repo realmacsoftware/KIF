@@ -8,6 +8,8 @@
 //  which Square, Inc. licenses this file to you.
 
 #import "KIFTestStep.h"
+
+#if TARGET_OS_IPHONE
 #import "CGGeometry-KIFAdditions.h"
 #import "UIAccessibilityElement-KIFAdditions.h"
 #import "UIApplication-KIFAdditions.h"
@@ -15,6 +17,9 @@
 #import "UITouch-KIFAdditions.h"
 #import "UIView-KIFAdditions.h"
 #import "UIWindow-KIFAdditions.h"
+#else
+#import "KIFTestStep-Mac.h"
+#endif
 
 
 static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
@@ -27,6 +32,8 @@ static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
 @property BOOL notificationOccurred;
 @property BOOL observingForNotification;
 
+#if TARGET_OS_IPHONE
+
 + (BOOL)_isUserInteractionEnabledForView:(UIView *)view;
 
 + (BOOL)_enterCharacter:(NSString *)characterString;
@@ -34,6 +41,8 @@ static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
 + (BOOL)_enterCustomKeyboardCharacter:(NSString *)characterString;
 
 + (UIAccessibilityElement *)_accessibilityElementWithLabel:(NSString *)label accessibilityValue:(NSString *)value tappable:(BOOL)mustBeTappable traits:(UIAccessibilityTraits)traits error:(out NSError **)error;
+
+#endif
 
 @end
 
@@ -73,14 +82,14 @@ static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
 
 + (id)stepThatFails;
 {
-    return [self stepWithDescription:@"Always fails" executionBlock:^(KIFTestStep *step, NSError **error) {
+    return [self stepWithDescription:@"Always fails" executionBlock:^KIFTestStepResult(KIFTestStep *step, NSError **error) {
         KIFTestCondition(NO, error, @"This test always fails");
     }];
 }
 
 + (id)stepThatSucceeds;
 {
-    return [self stepWithDescription:@"Always succeeds" executionBlock:^(KIFTestStep *step, NSError **error) {
+    return [self stepWithDescription:@"Always succeeds" executionBlock:^KIFTestStepResult(KIFTestStep *step, NSError **error) {
         return KIFTestStepResultSuccess;
     }];
 }
@@ -89,6 +98,8 @@ static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
 {
     // Add a logging call here or set a breakpoint to debug failed KIFTestCondition calls
 }
+
+#if TARGET_OS_IPHONE
 
 + (id)stepToWaitForViewWithAccessibilityLabel:(NSString *)label;
 {
@@ -192,11 +203,13 @@ static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
     }];
 }
 
+#endif
+
 + (id)stepToWaitForTimeInterval:(NSTimeInterval)interval description:(NSString *)description;
 {
     // In general, we should discourage use of a step like this. It's pragmatic to include it though.
     __block NSTimeInterval startTime = 0;
-    KIFTestStep *step = [self stepWithDescription:description executionBlock:^(KIFTestStep *step, NSError **error) {
+    KIFTestStep *step = [self stepWithDescription:description executionBlock:^KIFTestStepResult(KIFTestStep *step, NSError **error) {
         if (startTime == 0) {
             startTime = [NSDate timeIntervalSinceReferenceDate];
         }
@@ -216,7 +229,7 @@ static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
 {
     NSString *description = [NSString stringWithFormat:@"Wait for notification \"%@\"", name];
     
-    KIFTestStep *step = [self stepWithDescription:description executionBlock:^(KIFTestStep *step, NSError **error) {  
+    KIFTestStep *step = [self stepWithDescription:description executionBlock:^KIFTestStepResult(KIFTestStep *step, NSError **error) {  
         if (!step.observingForNotification) {            
             step.notificationName = name;
             step.notificationObject = object; 
@@ -229,6 +242,8 @@ static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
     }];   
     return step;
 }
+
+#if TARGET_OS_IPHONE
 
 + (id)stepToTapViewWithAccessibilityLabel:(NSString *)label;
 {
@@ -564,6 +579,8 @@ static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
     return steps;
 }
 
+#endif
+
 #pragma mark Initialization
 
 - (id)init;
@@ -625,6 +642,8 @@ static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
     self.notificationOccurred = YES;
 }
 
+#if TARGET_OS_IPHONE
+
 + (BOOL)_isUserInteractionEnabledForView:(UIView *)view;
 {
     BOOL isUserInteractionEnabled = view.userInteractionEnabled;
@@ -656,6 +675,8 @@ static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
     return isUserInteractionEnabled;
 }
 
+#endif
+
 + (NSString *)_representedKeyboardStringForCharacter:(NSString *)characterString;
 {
     // Interpret control characters appropriately
@@ -665,6 +686,8 @@ static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
     
     return characterString;
 }
+
+#if TARGET_OS_IPHONE
 
 + (BOOL)_enterCharacter:(NSString *)characterString;
 {
@@ -876,5 +899,7 @@ static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
     
     return element;
 }
+
+#endif
 
 @end
