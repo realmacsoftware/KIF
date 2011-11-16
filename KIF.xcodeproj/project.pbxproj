@@ -87,11 +87,11 @@
 		F6A9ACB5147338AE00990749 /* KIFElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KIFElement.h; sourceTree = "<group>"; };
 		F6A9ACB6147338AE00990749 /* KIFElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KIFElement.m; sourceTree = "<group>"; };
 		F6A9ACBD1473392500990749 /* MacKIF.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MacKIF.h; sourceTree = "<group>"; };
-		F6A9ACC3147339C200990749 /* KIFMac.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KIFMac.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F6A9ACC3147339C200990749 /* MacKIF.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MacKIF.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6A9ACC7147339C300990749 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		F6A9ACC8147339C300990749 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		F6A9ACC9147339C300990749 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		F6A9ACCC147339C300990749 /* KIFMac-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KIFMac-Info.plist"; sourceTree = SOURCE_ROOT; };
+		F6A9ACCC147339C300990749 /* MacKIF-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MacKIF-Info.plist"; sourceTree = SOURCE_ROOT; };
 		F6A9ACDC14733A9000990749 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 		F6A9ACDD14733E7D00990749 /* KIFTestStep-Mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KIFTestStep-Mac.h"; sourceTree = "<group>"; };
 		F6A9ACDE14733E7D00990749 /* KIFTestStep-Mac.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "KIFTestStep-Mac.m"; sourceTree = "<group>"; };
@@ -136,7 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				AAB07268139719AC008AF393 /* libKIF.a */,
-				F6A9ACC3147339C200990749 /* KIFMac.framework */,
+				F6A9ACC3147339C200990749 /* MacKIF.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -157,7 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				F6A9ACDB14733A9000990749 /* InfoPlist.strings */,
-				F6A9ACCC147339C300990749 /* KIFMac-Info.plist */,
+				F6A9ACCC147339C300990749 /* MacKIF-Info.plist */,
 				AAB0728113971A63008AF393 /* KIF-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -309,7 +309,7 @@
 			);
 			name = MacKIF;
 			productName = KIFMac;
-			productReference = F6A9ACC3147339C200990749 /* KIFMac.framework */;
+			productReference = F6A9ACC3147339C200990749 /* MacKIF.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -473,7 +473,7 @@
 				);
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				INFOPLIST_FILE = "KIFMac-Info.plist";
+				INFOPLIST_FILE = "MacKIF-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -501,7 +501,7 @@
 				GCC_PREFIX_HEADER = "Classes/KIF-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				INFOPLIST_FILE = "KIFMac-Info.plist";
+				INFOPLIST_FILE = "MacKIF-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -537,6 +537,7 @@
 				F6A9ACD6147339C300990749 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
