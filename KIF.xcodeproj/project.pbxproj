@@ -50,6 +50,9 @@
 		F6A9ACE814733F6900990749 /* KIFApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = F6A9ACB2147338AE00990749 /* KIFApplication.m */; };
 		F6A9ACE914733F6C00990749 /* KIFElement-Private.m in Sources */ = {isa = PBXBuildFile; fileRef = F6A9ACB4147338AE00990749 /* KIFElement-Private.m */; };
 		F6A9ACEA14733F6F00990749 /* KIFElement.m in Sources */ = {isa = PBXBuildFile; fileRef = F6A9ACB6147338AE00990749 /* KIFElement.m */; };
+		F6A9AD16147341AF00990749 /* KIFApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = F6A9ACB1147338AE00990749 /* KIFApplication.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F6A9AD18147341B500990749 /* KIFElement.h in Headers */ = {isa = PBXBuildFile; fileRef = F6A9ACB5147338AE00990749 /* KIFElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F6A9AD1C147342DC00990749 /* NSFileManager-KIFAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CDFD8E85139728B4008D299F /* NSFileManager-KIFAdditions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -271,6 +274,8 @@
 				F6A9ACE114733EF900990749 /* KIFTestController.h in Headers */,
 				F6A9ACE214733EFE00990749 /* KIFTestScenario.h in Headers */,
 				F6A9ACE314733F0500990749 /* KIFTestStep.h in Headers */,
+				F6A9AD16147341AF00990749 /* KIFApplication.h in Headers */,
+				F6A9AD18147341B500990749 /* KIFElement.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -378,6 +383,7 @@
 				F6A9ACE814733F6900990749 /* KIFApplication.m in Sources */,
 				F6A9ACE914733F6C00990749 /* KIFElement-Private.m in Sources */,
 				F6A9ACEA14733F6F00990749 /* KIFElement.m in Sources */,
+				F6A9AD1C147342DC00990749 /* NSFileManager-KIFAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

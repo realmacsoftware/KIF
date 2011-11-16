@@ -33,9 +33,7 @@ extern id objc_msgSend(id theReceiver, SEL theSelector, ...);
 + (void)_enableAccessibilityInSimulator;
 
 - (void)_initializeScenariosIfNeeded;
-#if TARGET_OS_IPHONE
 - (BOOL)_isAccessibilityInspectorEnabled;
-#endif
 - (void)_scheduleCurrentTestStep;
 - (void)_performTestStep:(KIFTestStep *)step;
 - (void)_advanceWithResult:(KIFTestStepResult)result error:(NSError*) error;
@@ -267,10 +265,10 @@ static void releaseInstance()
     }
 }
 
-#if TARGET_OS_IPHONE
-
 - (BOOL)_isAccessibilityInspectorEnabled;
 {
+#if TARGET_OS_IPHONE
+	
     // This method for testing if the inspector is enabled was taken from the Frank framework.
     // https://github.com/moredip/Frank
     UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
@@ -282,9 +280,10 @@ static void releaseInstance()
     [keyWindow setAccessibilityLabel:originalAccessibilityLabel];
     
     return isInspectorEnabled;
-}
-
+#else
+	return YES;
 #endif
+}
 
 - (void)_scheduleCurrentTestStep;
 {
