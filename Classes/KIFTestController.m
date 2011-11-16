@@ -281,7 +281,7 @@ static void releaseInstance()
     
     return isInspectorEnabled;
 #else
-	return YES;
+	return  AXAPIEnabled();
 #endif
 }
 
