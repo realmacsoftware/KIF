@@ -81,7 +81,7 @@
 }
 
 - (KIFElement *)elementWithIdentifier:(NSString *)identifier error:(NSError **)error {
-	KIFElement *element = [[KIFApplication currentApplication].mainWindow childWithIdentifier:identifier];
+	KIFElement *element = [[KIFApplication currentApplication].focusedWindow childWithIdentifier:identifier];
 	if(element == nil && error != NULL) {
 		*error = [[[NSError alloc] initWithDomain:@"KIFTest" code:KIFTestStepResultFailure userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Failed to find accessibility element with the identifier \"%@\"", identifier], NSLocalizedDescriptionKey, nil]] autorelease];
 	}
@@ -90,7 +90,7 @@
 }
 
 - (KIFElement *)elementWithTitle:(NSString *)title error:(NSError **)error {
-	KIFElement *element = [[KIFApplication currentApplication].mainWindow childWithTitle:title];
+	KIFElement *element = [[KIFApplication currentApplication].focusedWindow childWithTitle:title];
 	if(element == nil && error != NULL) {
 		*error = [[[NSError alloc] initWithDomain:@"KIFTest" code:KIFTestStepResultFailure userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Failed to find accessibility element with the title \"%@\"", title], NSLocalizedDescriptionKey, nil]] autorelease];
 	}
