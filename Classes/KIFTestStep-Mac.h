@@ -15,6 +15,16 @@
 @interface KIFTestStep (Mac)
 
 /*!
+ @method stepToWaitForFocusedWindowWithAccessibilityIdentifier:
+ @abstract A step that waits until a window with the provided identifier becomes the focused (key) window
+ @discussion The current focused window is examined for a match with the given identifier.  If it doesn't match, then the step will attempt to wait until it is.
+ 
+ @param identifier The accessibility identifier of the window to wait for.
+ @result A configured test step.
+ */
++ (id)stepToWaitForFocusedWindowWithAccessibilityTitle:(NSString*)title;
+
+/*!
  @method stepToWaitForViewWithAccessibilityIdentifier:
  @abstract A step that waits until a view or accessibility element is present.
  @discussion The view or accessibility element with the given identifier is found in the view heirarchy. If the element isn't found, then the step will attempt to wait until it is. Note that the view does not necessarily have to be visible on the screen, and may be behind another view or offscreen. Views with their hidden property set to YES are ignored.

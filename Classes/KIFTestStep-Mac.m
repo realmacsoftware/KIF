@@ -12,6 +12,22 @@
 
 @implementation KIFTestStep (Mac)
 
++ (id)stepToWaitForFocusedWindowWithAccessibilityTitle:(NSString*)title {
+	NSString *description = [NSString stringWithFormat:@"Wait for window with accessibility title \"%@\"", title];
+	
+    return [self stepWithDescription:description executionBlock:^KIFTestStepResult(KIFTestStep *step, NSError **error) {
+		KIFElement *element = [KIFApplication currentApplication].focusedWindow;
+		BOOL waitCondition = (element != nil && [[element title] isEqualToString:title]); 
+				
+        NSString *waitDescription = [NSString stringWithFormat:@"Waiting for presence of focused window with title \"%@\"", title];
+        
+        KIFTestWaitCondition(waitCondition, error, @"%@", waitDescription);
+		
+		return KIFTestStepResultSuccess;
+    }];
+
+}
+
 + (id)stepToWaitForViewWithAccessibilityIdentifier:(NSString *)identifier {
 	NSString *description = [NSString stringWithFormat:@"Wait for view with accessibility identifier \"%@\"", identifier];
         
@@ -53,7 +69,7 @@
     return [self stepWithDescription:description executionBlock:^KIFTestStepResult(KIFTestStep *step, NSError **error) {
 		KIFElement *element = [step elementWithTitle:title error:error];
         if (!element) {
-            return KIFTestStepResultWait;
+            return KIFTestStepResultFailure;
         }
         
         [element performPressAction];
