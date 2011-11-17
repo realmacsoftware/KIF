@@ -18,10 +18,8 @@
     return [self stepWithDescription:description executionBlock:^KIFTestStepResult(KIFTestStep *step, NSError **error) {
 		KIFElement *element = [KIFApplication currentApplication].focusedWindow;
 		BOOL waitCondition = (element != nil && [[element title] isEqualToString:title]); 
-				
-        NSString *waitDescription = [NSString stringWithFormat:@"Waiting for presence of focused window with title \"%@\"", title];
-        
-        KIFTestWaitCondition(waitCondition, error, @"%@", waitDescription);
+
+        KIFTestWaitCondition(waitCondition, error, @"Waiting for presence of focused window with title \"%@\"", title);
 		
 		return KIFTestStepResultSuccess;
     }];
@@ -33,7 +31,10 @@
         
     return [self stepWithDescription:description executionBlock:^KIFTestStepResult(KIFTestStep *step, NSError **error) {
 		KIFElement *element = [step elementWithIdentifier:identifier error:error];
-		return (element ? KIFTestStepResultSuccess : KIFTestStepResultWait);
+		
+		KIFTestWaitCondition(element, error, @"Waiting for view with accesibility identifier \"%@\"", identifier);
+
+		return KIFTestStepResultSuccess;
     }];
 }
 
@@ -42,10 +43,9 @@
     
     return [self stepWithDescription:description executionBlock:^KIFTestStepResult(KIFTestStep *step, NSError **error) {
 		KIFElement *element = [step elementWithIdentifier:identifier error:error];
-        if (!element) {
-            return KIFTestStepResultWait;
-        }
-        
+
+        KIFTestCondition(element, error, @"Failed to locate view to click with accessibility identifier \"%@\"", identifier);
+		
         [element performPressAction];
 		
         CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.5, false);
@@ -59,6 +59,9 @@
 	
     return [self stepWithDescription:description executionBlock:^KIFTestStepResult(KIFTestStep *step, NSError **error) {
 		KIFElement *element = [step elementWithTitle:title error:error];
+		
+		KIFTestWaitCondition(element, error, @"Waiting for view with title \"%@\"", title);
+		
 		return (element ? KIFTestStepResultSuccess : KIFTestStepResultWait);
     }];
 }
@@ -68,9 +71,8 @@
     
     return [self stepWithDescription:description executionBlock:^KIFTestStepResult(KIFTestStep *step, NSError **error) {
 		KIFElement *element = [step elementWithTitle:title error:error];
-        if (!element) {
-            return KIFTestStepResultFailure;
-        }
+       
+		KIFTestCondition(element, error, @"Failed to locate view to click with title \"%@\"", title);
         
         [element performPressAction];
 		

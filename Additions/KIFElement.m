@@ -25,7 +25,7 @@
 }
 
 - (NSString *)description {
-	return [NSString stringWithFormat:@"<%@: %p> identifier: %@, role: %@, subrole: %@", NSStringFromClass([self class]), self, self.identifier, self.role, self.subrole];
+	return [NSString stringWithFormat:@"<%@: %p> identifier: %@, title %@, role: %@, subrole: %@, titleUIElement: %@", NSStringFromClass([self class]), self, self.identifier, self.title, self.role, self.subrole, self.titleUIElement];
 }
 
 
@@ -93,7 +93,6 @@
 				[nextSetOfParents addObjectsFromArray:parent.children];
 			}
 		}
-		
 		parentsToInvestigate = nextSetOfParents;
 	}
 	
@@ -102,7 +101,11 @@
 
 - (KIFElement *)immediateChildWithTitle:(NSString *)title {
 	for(KIFElement *child in self.children) {
-		if([child.title isEqualToString:title]) {
+		if ([child.title isEqualToString:title]) {
+			return child;
+		}
+		// also check for a AXTitleUIElement linkage
+		if (child.titleUIElement != nil && [child.titleUIElement.value isEqualToString:title]) {
 			return child;
 		}
 	}
@@ -159,6 +162,10 @@
 
 - (NSString *)value {
 	return (NSString *) [self attributeForKey:NSAccessibilityValueAttribute];
+}
+
+- (KIFElement*)titleUIElement {
+	return [self wrappedAttributeForKey:NSAccessibilityTitleUIElementAttribute];
 }
 
 - (NSRect)frame {
