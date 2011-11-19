@@ -11,15 +11,6 @@
 #import <UIKit/UIKit.h>
 #endif
 
-#define ARC_ENABLED __has_feature(objc_arc)
-
-#if ARC_ENABLED 
-#define AUTO_RELEASE(object) object
-#else
-#define AUTO_RELEASE(object) ({ \
-[object autorelease]; \
-})
-#endif
 
 /*!
  @define KIFTestCondition
@@ -32,8 +23,7 @@
 #define KIFTestCondition(condition, error, ...) ({ \
 if (!(condition)) { \
     if (error) { \
-        *error = [[NSError alloc] initWithDomain:@"KIFTest" code:KIFTestStepResultFailure userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:__VA_ARGS__], NSLocalizedDescriptionKey, nil]]; \
-		AUTO_RELEASE(*error); \
+        *error = [NSError errorWithDomain:@"KIFTest" code:KIFTestStepResultFailure userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:__VA_ARGS__], NSLocalizedDescriptionKey, nil]]; \
     } \
     [KIFTestStep stepFailed]; \
     return KIFTestStepResultFailure; \
@@ -51,8 +41,7 @@ if (!(condition)) { \
 #define KIFTestWaitCondition(condition, error, ...) ({ \
 if (!(condition)) { \
     if (error) { \
-    *error = [[NSError alloc] initWithDomain:@"KIFTest" code:KIFTestStepResultWait userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:__VA_ARGS__], NSLocalizedDescriptionKey, nil]]; \
-	AUTO_RELEASE(*error); \
+    *error = [[[NSError alloc] initWithDomain:@"KIFTest" code:KIFTestStepResultWait userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:__VA_ARGS__], NSLocalizedDescriptionKey, nil]] autorelease]; \
     } \
     return KIFTestStepResultWait; \
 } \
