@@ -1,3 +1,5 @@
+*KIF Integration Testing Framework with support for OS X*
+
 KIF iOS Integration Testing Framework
 =====================================
 

@@ -26,6 +26,21 @@
 
 }
 
++ (id)stepToSelectCellInViewWithAccessibilityIdentifier:(NSString*)identifier cellTitle:(NSString*)title {
+	NSString *description = [NSString stringWithFormat:@"Select cell with title \"%@\" in view with accessibility identifier \"%@\"", title, identifier];
+	
+	return [self stepWithDescription:description executionBlock:^KIFTestStepResult(KIFTestStep *step, NSError **error) {
+		KIFElement *element = [step elementWithIdentifier:identifier error:error];
+		
+		NSLog(@"actions! %@", [element actions]);
+		
+		//KIFTestWaitCondition(element, error, @"Waiting for view with accesibility identifier \"%@\"", identifier);
+		
+		return KIFTestStepResultFailure;
+	}];
+}
+
+
 + (id)stepToWaitForViewWithAccessibilityIdentifier:(NSString *)identifier {
 	NSString *description = [NSString stringWithFormat:@"Wait for view with accessibility identifier \"%@\"", identifier];
         

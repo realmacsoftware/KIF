@@ -62,7 +62,6 @@
 				[nextSetOfParents addObjectsFromArray:parent.children];
 			}
 		}
-		
 		parentsToInvestigate = nextSetOfParents;
 	}
 	
@@ -124,8 +123,11 @@
 	return nil;
 }
 
-- (void)performPressAction {
-	AXUIElementPerformAction(self.elementRef, (CFStringRef) NSAccessibilityPressAction);
+- (void)performPressAction {	
+	AXError error = AXUIElementPerformAction(self.elementRef, (CFStringRef) NSAccessibilityPressAction);
+	if (error != kAXErrorSuccess) {
+		NSLog(@"failed to perform action for element %@ with error code %d", self, error);
+	}
 }
 
 - (KIFElement *)window {
@@ -166,6 +168,16 @@
 
 - (KIFElement*)titleUIElement {
 	return [self wrappedAttributeForKey:NSAccessibilityTitleUIElementAttribute];
+}
+
+- (NSArray*)actions {
+	NSArray* actionNames = nil;
+	AXError error = AXUIElementCopyActionNames(self.elementRef, (CFArrayRef*)&actionNames);
+
+	if (error == kAXErrorSuccess) {
+		return [actionNames autorelease];
+	}
+	return nil;
 }
 
 - (NSRect)frame {

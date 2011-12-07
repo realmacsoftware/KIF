@@ -24,6 +24,19 @@
  */
 + (id)stepToWaitForFocusedWindowWithAccessibilityTitle:(NSString*)title;
 
+
+/*!
+ @method stepToSelectCellInViewWithAccessibilityIdentifier:cellTitle:
+ @abstract A step that selects a cell in a view that is a list still (tableview, IKImageBrowser etc.)
+ @discussion A step to select a cell in a view.
+ 
+ @param identifier The accessibility identifier of view to select the cell in.
+ @param title The title of the cell to select in the view.
+ @result A configured test step.
+ */
+
++ (id)stepToSelectCellInViewWithAccessibilityIdentifier:(NSString*)identifier cellTitle:(NSString*)title;
+
 /*!
  @method stepToWaitForViewWithAccessibilityIdentifier:
  @abstract A step that waits until a view or accessibility element is present.

@@ -36,6 +36,7 @@
 @property (nonatomic, readonly) NSString *value;
 @property (nonatomic, readonly) NSRect frame; // in screen coordinates
 @property (nonatomic, readonly) KIFElement *titleUIElement;
+@property (nonatomic, readonly) NSArray* actions;
 
 
 @end
