@@ -71,8 +71,8 @@ static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
 
 + (id)stepWithDescription:(NSString *)description executionBlock:(KIFTestStepExecutionBlock)executionBlock;
 {
-    NSAssert(description.length, @"All steps must have a description");
-    NSAssert(executionBlock, @"A custom step cannot be created with an execution block");
+    NSCAssert(description.length, @"All steps must have a description");
+    NSCAssert(executionBlock, @"A custom step cannot be created with an execution block");
     
     KIFTestStep *step = [[self alloc] init];
     step.description = description;

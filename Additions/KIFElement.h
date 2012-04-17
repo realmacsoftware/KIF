@@ -22,7 +22,19 @@
 - (KIFElement *)childWithTitle:(NSString *)title; // breadth-first searches until it finds a match or runs out of children
 - (KIFElement *)immediateChildWithTitle:(NSString *)title; // only searches in the element's immediate children
 
-- (void)performPressAction;
+- (KIFElement *)childWithIndex:(NSUInteger)index;
+- (KIFElement *)childWithRole:(NSString *)role;
+
+- (BOOL)performAction:(NSString *)action;
+- (BOOL)performPressAction;
+- (BOOL)performCancelAction;
+
+- (void)stopMenuTracking;
+
+- (BOOL)typeText:(NSString *)string;
+
+- (BOOL)setValue:(CFTypeRef)value forAttribute:(NSString *)attribute;
+- (BOOL)selectElement;
 
 @property (nonatomic, assign, readonly) AXUIElementRef elementRef;
 @property (nonatomic, readonly) KIFElement *window;
@@ -34,9 +46,12 @@
 @property (nonatomic, readonly) NSString *identifier;
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) NSString *value;
+@property (nonatomic, readonly) NSUInteger index;
 @property (nonatomic, readonly) NSRect frame; // in screen coordinates
 @property (nonatomic, readonly) KIFElement *titleUIElement;
-@property (nonatomic, readonly) NSArray* actions;
+@property (nonatomic, readonly) NSArray *actions;
+@property (nonatomic, readonly) NSArray *attributes;
 
+- (NSInteger)numberOfChildren;
 
 @end

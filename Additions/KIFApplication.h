@@ -14,6 +14,7 @@
 + (KIFApplication *)applicationWithCurrentApplication;
 + (KIFApplication *)applicationWithBundleIdentifier:(NSString *)bundleIdentifier;
 
+@property (nonatomic, readonly) KIFElement *menuBar;
 @property (nonatomic, readonly) KIFElement *mainWindow;
 @property (nonatomic, readonly) KIFElement *focusedWindow;
 @property (nonatomic, readonly) NSArray *windows;

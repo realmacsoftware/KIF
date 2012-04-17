@@ -22,7 +22,7 @@
  @param identifier The accessibility identifier of the window to wait for.
  @result A configured test step.
  */
-+ (id)stepToWaitForFocusedWindowWithAccessibilityTitle:(NSString*)title;
++ (id)stepToWaitForFocusedWindowWithTitle:(NSString*)title;
 
 
 /*!
@@ -75,7 +75,72 @@
  */
 + (id)stepToClickViewWithTitle:(NSString *)title;
 
+/*!
+ @method stepToWaitForFocusedWindowWithAccessibilityIdentifier:
+ @abstract A step that waits for a window to be focussed.
+ @discussion The current focussed window is checked for a match with the given accesibility identifier. If the window isn't found or isn't found, then the step will attempt to wait until it is. Once the window is present and focussed, this step succeeds.
+ @param identifier the accessibility identifier for the window.
+ @result A configured test step.
+ */
++ (id)stepToWaitForFocusedWindowWithAccessibilityIdentifier:(NSString*)identifier;
+
+/*!
+ @method stepToWaitForSheetWithAccessibilityIdentifier:
+ @abstract A step that waits for a sheet to be presented.
+ @discussion The current focussed window is checked for an accesibility element with the NSAccessibilitySheetRole, and a matching accesibility identifier. If no sheet is found or it doesn't have a matching accessibility identifier, then the step will attempt to wait until it is. Once the sheet is present, this step succeeds.
+ @param identifier the accessibility identifier for the sheet.
+ @result A configured test step.
+ */
++ (id)stepToWaitForSheetWithAccessibilityIdentifier:(NSString*)identifier;
+
+/*!
+ @method stepToWaitForViewInSheetWithAccessibilityIdentifier:
+ @abstract A step that waits for a view inside a presented sheet to be available.
+ @discussion The current focussed window is checked for an accesibility element with the NSAccessibilitySheetRole, and then the children of this item are searched for a view matching the provided accesibility identifier. If no sheet is found or it doesn't have a child element matching accessibility identifier, then the step will attempt to wait until it is. Once the sheet is present, this step succeeds.
+ @param identifier the accessibility identifier for the sheet.
+ @result A configured test step.
+ */
++ (id)stepToWaitForViewInSheetWithAccessibilityIdentifier:(NSString *)identifier;
+
+/*!
+ @method stepToFocusOnViewWithAccessibilityIdentifier:
+ @abstract A step that sets the focussed attribute to YES for a view with the matching accessibilty identifier.
+ @discussion The current focussed window is searched for an accesibility element matching the provided accessibility identifier.  If not matching item is found, this test fails.  If a matching element is found and it does not have the NSAccessibilityFocusedAttribute, this test fails.  If a matching element is found and focus is not able to be set, this test fails. If a matching element is found and NSAccessibilityFocusedAttribute was successfully set to YES, this step succeeds.
+ @param identifier the accessibility identifier for the view.
+ @result A configured test step.
+ */
++ (id)stepToFocusOnViewWithAccessibilityIdentifier:(NSString*)identifier;
+
+/*!
+ @method stepToDoubleClickCellAtIndex:inCollectionViewWithAccessibilityIdentifier:
+ @abstract A step that performs a double click action on a collection view with provided accessibility identifier.
+ @discussion The current focussed window is searched for an accesibility element matching the provided accessibility identifier.  If not matching item is found, this test fails.  If a matching element is found and does not have a NSAccessibilityGridRole, this test fails.  If a child cannot be found for the provided index, this test fails. If a child is found at this index, and we are able to perform the press action (equivalent to dbl click) successfully then this step succeeds.
+ @param cellIndex the index of the cell to double click.
+ @param identifier the accessibility identifier for the view.
+ @result A configured test step.
+ */
++ (id)stepToDoubleClickCellAtIndex:(NSUInteger)cellIndex inCollectionViewWithAccessibilityIdentifier:(NSString*)identifier;
+
+
++ (id)stepToCheckCollectionViewWithIdentifier:(NSString*)identifier hasNumberOfCells:(NSUInteger)numberOfCells;
+
+/*!
+ @method stepToTypeText:inViewWithAccessibilityIdentifier:
+ @abstract A step that types text into a view with the provided accessibility identifier.
+ @discussion The current focussed window is searched for an accesibility element matching the provided accessibility identifier.  If no matching item is found, this test fails.  If a matching element is found and does not have a NSAccessibilityTextFieldRole or NSAccessibilityTextAreaRole, this test fails.  If the element's text cannot be succesfullt set, this test fails. If the text is set successfully, this step succeeds.
+ @param text the text to type into the view
+ @param identifier the accessibility identifier for the view.
+ @result A configured test step.
+ */
++ (id)stepToTypeText:(NSString*)text inViewWithAccessibilityIdentifier:(NSString*)identifier;
+
++ (id)stepToClickRowAtIndex:(NSUInteger)index inTableViewWithAccessibilityIdentifier:(NSString*)identifier;
++ (id)stepToClickRowWithTitle:(NSString*)title inTableViewWithAccessibilityIdentifier:(NSString*)identifier;
++ (id)stepToClickMenuItemWithTitle:(NSString*)title inMenuWithTitle:(NSString*)menuTitle;
+
+- (KIFElement*)childOfSheetWithIdentifier:(NSString*)identifier error:(NSError **)error;
 - (KIFElement *)elementWithIdentifier:(NSString *)identifier error:(NSError **)error;
 - (KIFElement *)elementWithTitle:(NSString *)title error:(NSError **)error;
+- (KIFElement *)menuWithTitle:(NSString *)title error:(NSError **)error;
 
 @end

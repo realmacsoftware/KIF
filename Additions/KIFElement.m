@@ -8,12 +8,16 @@
 #import "KIFElement.h"
 #import "KIFElement-Private.h"
 
+#import "KIFApplication.h"
+
 @interface KIFElement ()
 @property (nonatomic, assign) AXUIElementRef elementRef;
 @end
 
 
-@implementation KIFElement
+@implementation KIFElement {
+	NSPointerArray* _cachedChildren;
+}
 
 - (void)dealloc {
 	if(self.elementRef != NULL) {
@@ -25,7 +29,7 @@
 }
 
 - (NSString *)description {
-	return [NSString stringWithFormat:@"<%@: %p> identifier: %@, title %@, role: %@, subrole: %@, titleUIElement: %@", NSStringFromClass([self class]), self, self.identifier, self.title, self.role, self.subrole, self.titleUIElement];
+	return [NSString stringWithFormat:@"<%@: %p> identifier: %@, title %@, role: %@, subrole: %@, titleUIElement: %@ actions: %@", NSStringFromClass([self class]), self, self.identifier, self.title, self.role, self.subrole, self.titleUIElement, self.actions];
 }
 
 
@@ -112,6 +116,43 @@
 	return nil;
 }
 
+- (KIFElement *)childWithIndex:(NSUInteger)index {
+	CFArrayRef arrayRef = NULL;
+	AXError error = AXUIElementCopyAttributeValues(self.elementRef, (CFStringRef)NSAccessibilityChildrenAttribute, index, 1, &arrayRef);
+
+	if (error != kAXErrorSuccess) {
+		NSLog(@"error %d, getting children for element with identifier %@", error, self.identifier);
+		return nil;
+	}
+	
+	if (arrayRef == NULL || CFArrayGetCount(arrayRef) != 1) {
+		if (arrayRef != NULL) {
+			CFRelease(arrayRef);
+		}
+		return nil;
+	} else {
+		if (_cachedChildren == nil) {
+			_cachedChildren = [NSPointerArray pointerArrayWithStrongObjects];
+			[_cachedChildren setCount:[self numberOfChildren]];
+		}
+		
+		[_cachedChildren replacePointerAtIndex:index withPointer:[KIFElement elementWithElementRef:CFArrayGetValueAtIndex(arrayRef, 0)]];
+		
+		CFRelease(arrayRef);
+		
+		return [_cachedChildren pointerAtIndex:index];
+	}
+}
+
+- (KIFElement *)childWithRole:(NSString*)role {
+	for(KIFElement *child in self.children) {
+		if ([child.role isEqualToString:role]) {
+			return child;
+		}
+	}
+	return nil;
+}
+
 - (KIFElement *)childWithPath:(NSString *)identifierPath {
 	NSArray *elementIdentifiers = [identifierPath componentsSeparatedByString:@"/"];
 	KIFElement *currentElement = self;
@@ -119,15 +160,45 @@
 		currentElement = [currentElement immediateChildWithIdentifier:identifier];
 		if(currentElement == nil) break;
 	}
-	
 	return nil;
 }
 
-- (void)performPressAction {	
-	AXError error = AXUIElementPerformAction(self.elementRef, (CFStringRef) NSAccessibilityPressAction);
+- (BOOL)performAction:(NSString*)action {	
+	AXError error = AXUIElementPerformAction(self.elementRef, (CFStringRef)action);
 	if (error != kAXErrorSuccess) {
-		NSLog(@"failed to perform action for element %@ with error code %d", self, error);
+		NSLog(@"failed to perform action %@ for element %@ with error code %d", action, self, error);
+		return NO;
 	}
+	return YES;
+}
+
+- (BOOL)performPressAction {
+	return [self performAction:NSAccessibilityPressAction];
+}
+
+- (BOOL)performCancelAction {
+	return [self performAction:NSAccessibilityCancelAction];
+}
+
+- (void)stopMenuTracking {
+	[[KIFApplication currentApplication].menuBar performCancelAction];
+}
+
+- (BOOL)typeText:(NSString*)string {
+	return [self setValue:(CFStringRef)string forAttribute:NSAccessibilityValueAttribute];
+}
+
+- (BOOL)setValue:(CFTypeRef)value forAttribute:(NSString*)attribute {
+	AXError error = AXUIElementSetAttributeValue(self.elementRef, (CFStringRef)attribute, value);
+	if (error != kAXErrorSuccess) {
+		NSLog(@"Unable to select element %@ with error code %d", self, error);
+		return NO;
+	}
+	return YES;
+}
+
+- (BOOL)selectElement {
+	return [self setValue:kCFBooleanTrue forAttribute:NSAccessibilitySelectedAttribute];
 }
 
 - (KIFElement *)window {
@@ -140,6 +211,13 @@
 
 - (NSArray *)children {
 	return [self wrappedAttributeForKey:NSAccessibilityChildrenAttribute];
+}
+
+- (NSInteger)numberOfChildren {
+	CFIndex count = 0;
+	AXUIElementGetAttributeValueCount(self.elementRef, (CFStringRef)NSAccessibilityChildrenAttribute, &count);
+	
+	return count;
 }
 
 - (KIFElement *)parent {
@@ -166,6 +244,10 @@
 	return (NSString *) [self attributeForKey:NSAccessibilityValueAttribute];
 }
 
+- (NSUInteger)index {
+	return [(NSNumber*)[self attributeForKey:NSAccessibilityIndexAttribute] unsignedIntegerValue];
+}
+
 - (KIFElement*)titleUIElement {
 	return [self wrappedAttributeForKey:NSAccessibilityTitleUIElementAttribute];
 }
@@ -176,6 +258,16 @@
 
 	if (error == kAXErrorSuccess) {
 		return [actionNames autorelease];
+	}
+	return nil;
+}
+
+- (NSArray*)attributes {
+	NSArray* attributeNames = nil;
+	AXError error = AXUIElementCopyAttributeNames(self.elementRef, (CFArrayRef*)&attributeNames);
+	
+	if (error == kAXErrorSuccess) {
+		return [attributeNames autorelease];
 	}
 	return nil;
 }

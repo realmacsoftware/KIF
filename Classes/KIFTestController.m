@@ -121,7 +121,7 @@ static void releaseInstance()
 
 - (id)init;
 {
-    NSAssert(!sharedInstance, @"KIFTestController should not be initialized manually. Use +sharedInstance instead.");
+    NSCAssert(!sharedInstance, @"KIFTestController should not be initialized manually. Use +sharedInstance instead.");
     
     self = [super init];
     if (!self) {
@@ -216,8 +216,8 @@ static void releaseInstance()
 
 - (void)addScenario:(KIFTestScenario *)scenario;
 {
-    NSAssert(![self.scenarios containsObject:scenario], @"The scenario %@ is already added", scenario);
-    NSAssert(scenario.description.length, @"Cannot add a scenario that does not have a description");
+    NSCAssert(![self.scenarios containsObject:scenario], @"The scenario %@ is already added", scenario);
+    NSCAssert(scenario.description.length, @"Cannot add a scenario that does not have a description");
     
     [self _initializeScenariosIfNeeded];
     [scenarios addObject:scenario];
@@ -225,8 +225,8 @@ static void releaseInstance()
 
 - (void)startTestingWithCompletionBlock:(KIFTestControllerCompletionBlock)inCompletionBlock
 {
-    NSAssert(!self.testing, @"Testing is already in progress");
-    NSAssert([self _isAccessibilityInspectorEnabled], @"The accessibility inspector must be enabled in order to run KIF tests. It can be turned on in the Settings app of the simulator by going to General -> Accessibility.");
+    NSCAssert(!self.testing, @"Testing is already in progress");
+    NSCAssert([self _isAccessibilityInspectorEnabled], @"The accessibility inspector must be enabled in order to run KIF tests. It can be turned on in the Settings app of the simulator by going to General -> Accessibility.");
     
     self.testing = YES;
     self.testSuiteStartDate = [NSDate date];
@@ -322,7 +322,7 @@ static void releaseInstance()
 
 - (void)_advanceWithResult:(KIFTestStepResult)result error:(NSError *)error;
 {
-    NSAssert((!self.currentStep || result == KIFTestStepResultSuccess || error), @"The step \"%@\" returned a non-successful result but did not include an error", self.currentStep.description);
+    NSCAssert((!self.currentStep || result == KIFTestStepResultSuccess || error), @"The step \"%@\" returned a non-successful result but did not include an error", self.currentStep.description);
     
     KIFTestStep *previousStep = self.currentStep;
     NSTimeInterval currentStepDuration = -[self.currentStepStartDate timeIntervalSinceNow];
@@ -365,14 +365,14 @@ static void releaseInstance()
         }
     }
     
-    NSAssert(!self.currentStep || self.currentStep.description.length, @"The step following the step \"%@\" is missing a description", previousStep.description);
+    NSCAssert(!self.currentStep || self.currentStep.description.length, @"The step following the step \"%@\" is missing a description", previousStep.description);
 }
 
 - (KIFTestStep *)_nextStep;
 {
     NSArray *steps = self.currentScenario.steps;
     NSUInteger currentStepIndex = [steps indexOfObjectIdenticalTo:self.currentStep];
-    NSAssert(currentStepIndex != NSNotFound, @"Current step %@ not found in current scenario %@, but should be!", self.currentStep, self.currentScenario);
+    NSCAssert(currentStepIndex != NSNotFound, @"Current step %@ not found in current scenario %@, but should be!", self.currentStep, self.currentScenario);
     
     NSUInteger nextStepIndex = currentStepIndex + 1;
     KIFTestStep *nextStep = nil;
@@ -400,7 +400,7 @@ static void releaseInstance()
         return nil;
     } else if (self.currentScenario) {
         currentScenarioIndex = [self.scenarios indexOfObjectIdenticalTo:self.currentScenario];
-        NSAssert(currentScenarioIndex != NSNotFound, @"Current scenario %@ not found in test scenarios %@, but should be!", self.currentScenario, self.scenarios);
+        NSCAssert(currentScenarioIndex != NSNotFound, @"Current scenario %@ not found in test scenarios %@, but should be!", self.currentScenario, self.scenarios);
         
         [self _logDidFinishScenario:self.currentScenario duration:-[self.currentScenarioStartDate timeIntervalSinceNow]];
         if (result == KIFTestStepResultSuccess) {
@@ -511,9 +511,9 @@ static void releaseInstance()
 - (void)_logTestingDidStart;
 {
     if (failedScenarioIndexes.count != self.scenarios.count) {
-        KIFLog(@"BEGIN KIF TEST RUN: re-running %d of %d scenarios that failed last time", failedScenarioIndexes.count, self.scenarios.count);
+        KIFLog(@"BEGIN KIF TEST RUN: re-running %lu of %lu scenarios that failed last time", failedScenarioIndexes.count, self.scenarios.count);
     } else {
-        KIFLog(@"BEGIN KIF TEST RUN: %d scenarios", self.scenarios.count);
+        KIFLog(@"BEGIN KIF TEST RUN: %lu scenarios", self.scenarios.count);
     }
 }
 
@@ -521,18 +521,18 @@ static void releaseInstance()
 {
     KIFLogBlankLine();
     KIFLogSeparator();
-    KIFLog(@"KIF TEST RUN FINISHED: %d failures (duration %.2fs)", failureCount, -[self.testSuiteStartDate timeIntervalSinceNow]);
+    KIFLog(@"KIF TEST RUN FINISHED: %lu failures (duration %.2fs)", failureCount, -[self.testSuiteStartDate timeIntervalSinceNow]);
     KIFLogSeparator();
     
     // Also log the failure count to stdout, for easier integration with CI tools.
-    NSLog(@"*** KIF TESTING FINISHED: %d failures", failureCount);
+    NSLog(@"*** KIF TESTING FINISHED: %lu failures", failureCount);
 }
 
 - (void)_logDidStartScenario:(KIFTestScenario *)scenario;
 {
     KIFLogBlankLine();
     KIFLogSeparator();
-    KIFLog(@"BEGIN SCENARIO %d/%d (%d steps)", [self.scenarios indexOfObjectIdenticalTo:scenario] + 1, self.scenarios.count, scenario.steps.count);
+    KIFLog(@"BEGIN SCENARIO %lu/%lu (%lu steps)", [self.scenarios indexOfObjectIdenticalTo:scenario] + 1, self.scenarios.count, scenario.steps.count);
     KIFLog(@"%@", scenario.description);
     KIFLogSeparator();
 }
@@ -542,7 +542,7 @@ static void releaseInstance()
     KIFLogBlankLine();
     KIFLogSeparator();
     NSString *reason = (scenario.skippedByFilter ? @"filter doesn't match description" : @"only running previously-failed scenarios");
-    KIFLog(@"SKIPPING SCENARIO %d/%d (%@)", [self.scenarios indexOfObjectIdenticalTo:scenario] + 1, self.scenarios.count, reason);
+    KIFLog(@"SKIPPING SCENARIO %lu/%lu (%@)", [self.scenarios indexOfObjectIdenticalTo:scenario] + 1, self.scenarios.count, reason);
     KIFLog(@"%@", scenario.description);
     KIFLogSeparator();
 }

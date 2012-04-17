@@ -33,7 +33,7 @@
 
 + (KIFApplication *)applicationWithBundleIdentifier:(NSString *)bundleIdentifier {
 	NSArray *apps = [NSRunningApplication runningApplicationsWithBundleIdentifier:bundleIdentifier];
-	NSAssert1(apps.count > 0, @"We couldn't find any apps with the bundle identifier: %@", bundleIdentifier);
+	NSCAssert1(apps.count > 0, @"We couldn't find any apps with the bundle identifier: %@", bundleIdentifier);
 	
 	if(apps.count > 1) {
 		NSLog(@"Whoa, we found multiple running apps with that bundle ID: %@. We're just going to use the last one.", apps);
@@ -50,6 +50,10 @@
 	if(self == nil) return nil;
 	
 	return self;
+}
+
+- (KIFElement*)menuBar {
+	return [self wrappedAttributeForKey:NSAccessibilityMenuBarAttribute];
 }
 
 - (KIFElement *)mainWindow {
